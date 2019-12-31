@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  ctfd:
+    ports: #Removed
+    expose:
+      - "8000"
+    environment:
+      - USE_SSL=false
+      - REVERSE_PROXY=true
+      - USE_RELOAD=false

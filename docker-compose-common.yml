@@ -1,0 +1,34 @@
+version: '2.1'
+
+services:
+  proxy:
+    image: nginx:alpine
+    restart: always
+    # Included NGINX config used hostname to determine what it's server_name will be
+    # Either set NGINX_HOSTNAME to it's public DNS name, change this line, or the config
+    hostname: ${NGINX_HOSTNAME:-localhost}
+    ports:
+      - "80:8080"
+      - "81:8000"
+      - "443:8443"
+    volumes:
+      - ../nginx:/etc/nginx:ro
+      - ../data/nginx/logs:/var/log/nginx
+      - ../data/certbot/conf:/etc/letsencrypt
+      - ../data/certbot/www:/var/www/certbot
+    networks:
+      default:
+      internal:
+    depends_on:
+      - certbot
+      #Depends_On_Here_Dont_Touch_This_Comment
+      - ctfd-hihi-2019-mini-ctf-3
+      - ctfd-haha-2019-mini-ctf-2
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ../data/certbot/conf:/etc/letsencrypt
+      - ../data/certbot/www:/var/www/certbot
+      #TLS_Certs_Here_Dont_Touch_This_Comment
+      - ../letsencrypt-files/ctf.empire-univ.com.ini:/etc/letsencrypt/cli.ini:ro
