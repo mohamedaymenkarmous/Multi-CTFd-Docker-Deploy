@@ -2,21 +2,21 @@
   "projects":
   [
     {
-      "name":"CTF-entry-level",
+      "name":"ctf-entry-level",
       "description":"A CTF with an entry level",
       "hostname":"entry.ctf.example.com",
       "generic-hostname":"",
       "tls-enabled":"0"
     },
     {
-      "name":"CTF-medium-level",
+      "name":"ctf-medium-level",
       "description":"A CTF with a medium level",
       "hostname":"medium.ctf.example.com",
       "generic-hostname":"ctf.example.com",
       "tls-enabled":"1"
     },
     {
-      "name":"CTF-hard-level",
+      "name":"ctf-hard-level",
       "description":"A CTF with a hard level",
       "hostname":"hard.ctf.example.com",
       "generic-hostname":"ctf.example.com",
