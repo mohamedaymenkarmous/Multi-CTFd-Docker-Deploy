@@ -25,7 +25,7 @@ done
 
 docker-compose ${sum} config > /dev/null || (echo "There is a problem while checking the config of docker-compose for these files: ${sum}";exit)
 
-n=$(cat ../config.json |python -c "import json,sys;print len(json.load(sys.stdin)['tls'])")
+n=$(cat ../config.json |python3 -c "import json,sys;print(len(json.load(sys.stdin)['tls']))")
 
 if [ "$n" == "0" ]; then
   echo "Skipped"
@@ -33,9 +33,9 @@ fi
 
 # All letsencrypt configuration files should be generated before any containers starts
 for i in $(seq 1 $n);do
-  hostnames=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['hostnames']")
-  setup=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['setup']")
-  email=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['email']")
+  hostnames=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
+  setup=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['setup'])")
+  email=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['email'])")
   if [ "$setup" == "1" ]; then
 
     hostname=$(echo $hostnames | cut -d" " -f1)
@@ -54,9 +54,9 @@ for i in $(seq 1 $n);do
 #done
 
 #for i in $(seq 1 $n);do
-#  hostnames=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['hostnames']")
-#  setup=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['setup']")
-#  email=$(cat ../config.json |python -c "import json,sys;print json.load(sys.stdin)['tls'][${i}-1]['email']")
+#  hostnames=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
+#  setup=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['setup'])")
+#  email=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['email'])")
 #  if [ "$setup" == "1" ]; then
 
 #    hostname=$(echo $hostnames | cut -d" " -f1)
