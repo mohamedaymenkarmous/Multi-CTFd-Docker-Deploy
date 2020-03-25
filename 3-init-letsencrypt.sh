@@ -19,7 +19,7 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
 fi
 
 sum=""
-for x in $(ls -1 "dcf-*.yml");do
+for x in $(ls -1 dcf-*.yml);do
   sum="${sum} -f ${x}"
 done
 
