@@ -6,6 +6,7 @@ if [ "$n" == "0" ]; then
   echo "Skipped"
 fi
 
+ls docker-compose-files &>/dev/null || mkdir docker-compose-files
 for i in $(seq 1 $n);do
   name=$(cat config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['projects'][${i}-1]['name'])")
   hostname=$(cat config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['projects'][${i}-1]['hostname'])")
