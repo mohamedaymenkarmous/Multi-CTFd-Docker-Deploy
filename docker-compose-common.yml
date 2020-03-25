@@ -29,4 +29,4 @@ services:
       - ../data/certbot/conf:/etc/letsencrypt
       - ../data/certbot/www:/var/www/certbot
       #TLS_Certs_Here_Dont_Touch_This_Comment
-      - ../letsencrypt-files/ctf.empire-univ.com.ini:/etc/letsencrypt/cli.ini:ro
+
