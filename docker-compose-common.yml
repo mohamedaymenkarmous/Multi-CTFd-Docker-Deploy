@@ -22,8 +22,6 @@ services:
     depends_on:
       - certbot
       #Depends_On_Here_Dont_Touch_This_Comment
-      - ctfd-hihi-2019-mini-ctf-3
-      - ctfd-haha-2019-mini-ctf-2
 
   certbot:
     image: certbot/certbot
