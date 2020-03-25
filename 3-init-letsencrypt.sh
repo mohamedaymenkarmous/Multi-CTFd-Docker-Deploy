@@ -19,7 +19,7 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
 fi
 
 sum=""
-for x in $(ls dcf-*.yml);do
+for x in $(ls -1 "dcf-*.yml");do
   sum="${sum} -f ${x}"
 done
 
@@ -30,7 +30,7 @@ n=$(cat ../config.json |python3 -c "import json,sys;print(len(json.load(sys.stdi
 if [ "$n" == "0" ]; then
   echo "Skipped"
 fi
-
+ls ../letsencrypt-files &> /dev/null || mkdir ../letsencrypt-files
 # All letsencrypt configuration files should be generated before any containers starts
 for i in $(seq 1 $n);do
   hostnames=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
