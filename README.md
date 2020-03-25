@@ -18,21 +18,21 @@ This is an example of a configuration that will let you create three CTFd instan
   "projects":
   [
     {
-      "name":"CTF-entry-level",
+      "name":"ctf-entry-level",
       "description":"A CTF with an entry level",
       "hostname":"entry.ctf.example.com",
       "generic-hostname":"",
       "tls-enabled":"0"
     },
     {
-      "name":"CTF-medium-level",
+      "name":"ctf-medium-level",
       "description":"A CTF with a medium level",
       "hostname":"medium.ctf.example.com",
       "generic-hostname":"ctf.example.com",
       "tls-enabled":"1"
     },
     {
-      "name":"CTF-hard-level",
+      "name":"ctf-hard-level",
       "description":"A CTF with a hard level",
       "hostname":"hard.ctf.example.com",
       "generic-hostname":"ctf.example.com",
@@ -63,7 +63,7 @@ In this section, we will explain how each parameter works in the configuration f
 
 - `projects`: Each object will describe a CTFd instance. If the element was newly added, a new CTFd instance will be created. If the element already existed, the existing CTFd instance will be modified. But actually if an element was removed, the existing CTFd instance will not be removed. In the previous example, we setup three CTFd instances.
 
-- `projects[].name`: This is only an ID for the CTFd instance that should be uniq. The name will not be viewed in the browsed since it's referenced in the build process to generate the new CTFd instance. It should respect only the alpha-numeric notation with "-", "_", "." extra characters ([A-Za-z-_\.]). It is important to note that no other extra characters was allowed. Otherwise, the build will crash.
+- `projects[].name`: This is only an ID for the CTFd instance that should be uniq. The name will not be viewed in the browsed since it's referenced in the build process to generate the new CTFd instance. It should respect only the alpha-numeric notation with "-", "_", "." extra characters ([a-z-_\.]) (no uppercase characters will be allowed). It is important to note that no other extra characters was allowed. Otherwise, the build will crash.
 
 - `projects[].description`: The description is not viewed anywhere. It's only for better understanding the configuration file, for which the CTFd instance was created.
 
@@ -110,7 +110,7 @@ To check if everything was OK, you have to execute:
 docker ps
 ```
 
-For the previous example, you have to see ten docker containers: `proxy`, `ctfd_CTF-entry-level`, `db_CTF-entry-level`, `cache_CTF-entry-level`, `ctfd_CTF-medium-level`, `db_CTF-medium-level`, `cache_CTF-medium-level`, `ctfd_CTF-hard-level`, `db_CTF-hard-level`, `cache_CTF-hard-level`.
+For the previous example, you have to see ten docker containers: `proxy`, `ctfd_ctf-entry-level`, `db_ctf-entry-level`, `cache_ctf-entry-level`, `ctfd_ctf-medium-level`, `db_ctf-medium-level`, `cache_ctf-medium-level`, `ctfd_ctf-hard-level`, `db_ctf-hard-level`, `cache_ctf-hard-level`.
 
 ## Reporting an issue or a feature request
 
