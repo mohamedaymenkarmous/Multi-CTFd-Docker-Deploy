@@ -19,13 +19,11 @@ diff data/templates/docker-compose-merged.yml docker-compose-merged-reference.ym
 ln -sf ${PWD}/docker-compose-common.yml ${PWD}/CTFd/dcf-docker-compose-common.yml
 echo "### Creating docker-compose files"
 ./2-create-new-projects-docker.sh
+echo "### Creating new projects"
+./3-create-new-projects-nginx.sh
 cd CTFd/
 echo "### Generating TLS certificates"
 ../3-init-letsencrypt.sh
-cd ..
-echo "### Creating new projects"
-./4-create-new-projects-nginx.sh
-cd CTFd
 echo "### Checking for the github.com/noraj/ctfd-theme-sigsegv2 plugin"
 (ls CTFd/themes/sigsegv2 &>/dev/null && cd CTFd/themes/sigsegv2 && git pull && cd ../../..) || git clone https://github.com/noraj/ctfd-theme-sigsegv2.git CTFd/themes/sigsegv2
 echo "### Adding logo and favicon files"
@@ -35,7 +33,7 @@ ln -sf ${PWD}/../logo.png ${PWD}/CTFd/themes/core/static/img/logo.png
 ln -sf ${PWD}/../favicon.ico ${PWD}/CTFd/themes/core/static/img/favicon.ico
 
 sum=""
-for x in $(ls dcf-*.yml);do
+for x in $(ls -1 dcf-*.yml);do
   sum="${sum} -f ${x}"
 done
 
