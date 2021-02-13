@@ -40,11 +40,14 @@ for i in $(seq 1 $n);do
 
     hostname=$(echo $hostnames | cut -d" " -f1)
 
-    echo "### Creating dummy certificate for $hostname ..."
-    path="/etc/letsencrypt/live/$hostname"
+    echo "### Backuping the old certificate ..."
+    bn=$(date +%s)
+    mv $data_path/conf/live/$hostname $data_path/conf/live/$hostname.bak.$bn
+    echo "Backup folder: $data_path/conf/live/$hostname.bak.$bn"
+
     mkdir -p "$data_path/conf/live/$hostname"
 
-    echo "### Generating letsencrypt files"
+    echo "### Generating letsencrypt configuration files"
     hostnames_formatted=$(echo $hostnames| tr ' ' ', ')
     sed "s/REPLACED_HOSTNAMES/${hostnames_formatted}/g" <../templates/letsencrypt-template.ini > ../letsencrypt-files/${hostname}.ini
     sed "s/REPLACED_EMAIL/${email}/g" <../letsencrypt-files/${hostname}.ini > ../letsencrypt-files/${hostname}.ini.bak
@@ -61,20 +64,22 @@ for i in $(seq 1 $n);do
 
 #    hostname=$(echo $hostnames | cut -d" " -f1)
 
-    docker-compose ${sum} run --rm --entrypoint "\
+    echo "### Creating dummy certificate for $hostname ..."
+    path="/etc/letsencrypt/live/$hostname"
+    docker-compose ${sum} run --rm --entrypoint "sh -c \"mkdir -p $path && \
       openssl req -x509 -nodes -newkey rsa:1024 -days 1\
         -keyout '$path/privkey.pem' \
         -out '$path/fullchain.pem' \
-        -subj '/CN=localhost'" certbot
+        -subj '/CN=localhost'\"" certbot
 
     echo "### Starting nginx ..."
     docker-compose ${sum} up --force-recreate -d proxy
 
     echo "### Deleting dummy certificate for $hostnames ..."
-    docker-compose ${sum} run --rm --entrypoint "\
+    docker-compose ${sum} run --rm --entrypoint "sh -c \"\
       rm -Rf /etc/letsencrypt/live/$hostname && \
       rm -Rf /etc/letsencrypt/archive/$hostname && \
-      rm -Rf /etc/letsencrypt/renewal/$hostname.conf" certbot
+      rm -Rf /etc/letsencrypt/renewal/$hostname.conf\"" certbot
 
     echo "### Requesting Let's Encrypt certificate for $hostnames ..."
     #Join $hostnames to -d args
@@ -83,14 +88,21 @@ for i in $(seq 1 $n);do
     #  domain_args="$domain_args -d $hostname"
     #done
 
-    docker-compose ${sum} run --rm --entrypoint "\
-      certbot register --agree-tos --email $email" certbot
-
+    docker-compose ${sum} run --rm --entrypoint "sh -c \"\
+      certbot register --agree-tos --email $email\"" certbot
     echo "### Email registration done"
 
     docker-compose ${sum} run --rm --entrypoint "\
-      certbot certonly --config /etc/letsencrypt/cli.ini --expand" certbot
-
+      certbot certonly --config /etc/letsencrypt/cli.ini --expand" certbot | tee $data_path/$hostname.log
+      #certbot certonly --config /etc/letsencrypt/cli.ini --test-cert --expand" certbot
+    new_file=$(cat $data_path/$hostname.log | grep -A1 Congratulations | grep -Po '/live/\K[^\/]*')
+    if [ "$new_file" = "$hostname" ]; then
+      echo "Certificate created in /etc/letsencrypt/live/$hostname"
+    else
+      echo "Certificate created in /etc/letsencrypt/live/$new_file"
+      mv $data_path/conf/live/$new_file $data_path/conf/live/$hostname
+      echo "Then moved to /etc/letsencrypt/live/$hostname"
+    fi
     echo "### Reloading nginx ..."
     docker-compose ${sum} exec proxy nginx -s reload
 
