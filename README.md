@@ -22,6 +22,8 @@ This is an example of a configuration that will let you create three CTFd instan
       "description":"A CTF with an entry level",
       "hostname":"entry.ctf.example.com",
       "generic-hostname":"",
+      "default-server":"0",
+      "deferred-server":"0",
       "tls-enabled":"0"
     },
     {
@@ -29,6 +31,8 @@ This is an example of a configuration that will let you create three CTFd instan
       "description":"A CTF with a medium level",
       "hostname":"medium.ctf.example.com",
       "generic-hostname":"ctf.example.com",
+      "default-server":"0",
+      "deferred-server":"0",
       "tls-enabled":"1"
     },
     {
@@ -36,6 +40,8 @@ This is an example of a configuration that will let you create three CTFd instan
       "description":"A CTF with a hard level",
       "hostname":"hard.ctf.example.com",
       "generic-hostname":"ctf.example.com",
+      "default-server":"0",
+      "deferred-server":"0",
       "tls-enabled":"1"
     }
   ],
