@@ -9,7 +9,7 @@ fi
 ls CTFd &>/dev/null || git clone https://github.com/CTFd/CTFd.git CTFd/
 cd CTFd/
 git fetch
-git checkout tags/2.1.5
+#git checkout tags/2.1.5
 sudo apt-get -y install python3-pip
 sudo pip3 install ruamel.yaml
 cd ..
