@@ -42,7 +42,7 @@ for i in $(seq 1 $n);do
 
     echo "### Backuping the old certificate ..."
     bn=$(date +%s)
-    mv $data_path/conf/live/$hostname $data_path/conf/live/$hostname.bak.$bn
+    cp -R $data_path/conf/live/$hostname $data_path/conf/live/$hostname.bak.$bn
     echo "Backup folder: $data_path/conf/live/$hostname.bak.$bn"
 
     mkdir -p "$data_path/conf/live/$hostname"
@@ -74,6 +74,18 @@ for i in $(seq 1 $n);do
 
     echo "### Starting nginx ..."
     docker-compose ${sum} up --force-recreate -d proxy
+
+    bad_response="0"
+    for h in $hostnames; do
+      http_response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://$hostname/)
+      echo "http://$hostname/ -> Response: $http_response"
+      if [ "$http_response" = "000" ]; then
+        bad_response="1"
+      fi
+    done
+    if [ "$bad_response" = "1" ]; then
+      echo "Please make sure that all the web services are running and then execute 5-renew-certs.sh"
+    fi
 
     echo "### Deleting dummy certificate for $hostnames ..."
     docker-compose ${sum} run --rm --entrypoint "sh -c \"\
