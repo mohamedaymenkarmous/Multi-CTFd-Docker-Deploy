@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR_NAME=$(dirname "$0")
 cd ${DIR_NAME}
-if test -f ".setup_done"; then
++if [ ! -f ".setup_done" ]; then
   ./1-setup-docker.sh
   echo "1"> .setup_done
 fi
