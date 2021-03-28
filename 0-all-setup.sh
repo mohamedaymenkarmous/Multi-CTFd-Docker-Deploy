@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR_NAME=$(dirname "$0")
 cd ${DIR_NAME}
-+if [ ! -f ".setup_done" ]; then
+if [ ! -f ".setup_done" ]; then
   ./1-setup-docker.sh
   echo "1"> .setup_done
 fi
@@ -10,7 +10,8 @@ ls CTFd &>/dev/null || git clone https://github.com/CTFd/CTFd.git CTFd/
 cd CTFd/
 git fetch
 git checkout tags/2.1.5
-sudo pip3 install ruamel.yaml &>/dev/null || (sudo apt-get -y install python3-pip;sudo pip3 install ruamel.yaml)
+sudo apt-get -y install python3-pip
+sudo pip3 install ruamel.yaml
 cd ..
 mkdir -p data/templates
 ./bin/merge-yaml.py docker-compose-base.yml CTFd/docker-compose.yml data/templates/docker-compose-merged.yml
