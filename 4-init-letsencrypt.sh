@@ -77,46 +77,46 @@ for i in $(seq 1 $n);do
 
     bad_response="0"
     for h in $hostnames; do
-      http_response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://$hostname/)
-      echo "http://$hostname/ -> Response: $http_response"
+      http_response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://$h/)
+      echo "http://$h/ -> Response: $http_response"
       if [ "$http_response" = "000" ]; then
         bad_response="1"
       fi
     done
     if [ "$bad_response" = "1" ]; then
       echo "Please make sure that all the web services are running and then execute 5-renew-certs.sh"
-    fi
-
-    echo "### Deleting dummy certificate for $hostnames ..."
-    docker-compose ${sum} run --rm --entrypoint "sh -c \"\
-      rm -Rf /etc/letsencrypt/live/$hostname && \
-      rm -Rf /etc/letsencrypt/archive/$hostname && \
-      rm -Rf /etc/letsencrypt/renewal/$hostname.conf\"" certbot
-
-    echo "### Requesting Let's Encrypt certificate for $hostnames ..."
-    #Join $hostnames to -d args
-    #domain_args=""
-    #for domain in "${hostnames[@]}"; do
-    #  domain_args="$domain_args -d $hostname"
-    #done
-
-    docker-compose ${sum} run --rm --entrypoint "sh -c \"\
-      certbot register --agree-tos --email $email\"" certbot
-    echo "### Email registration done"
-
-    docker-compose ${sum} run --rm --entrypoint "\
-      certbot certonly --config /etc/letsencrypt/cli.ini --expand" certbot | tee $data_path/$hostname.log
-      #certbot certonly --config /etc/letsencrypt/cli.ini --test-cert --expand" certbot
-    new_file=$(cat $data_path/$hostname.log | grep -A1 Congratulations | grep -Po '/live/\K[^\/]*')
-    if [ "$new_file" = "$hostname" ]; then
-      echo "Certificate created in /etc/letsencrypt/live/$hostname"
     else
-      echo "Certificate created in /etc/letsencrypt/live/$new_file"
-      mv $data_path/conf/live/$new_file $data_path/conf/live/$hostname
-      echo "Then moved to /etc/letsencrypt/live/$hostname"
+      echo "### Deleting dummy certificate for $hostnames ..."
+      docker-compose ${sum} run --rm --entrypoint "sh -c \"\
+        rm -Rf /etc/letsencrypt/live/$hostname && \
+        rm -Rf /etc/letsencrypt/archive/$hostname && \
+        rm -Rf /etc/letsencrypt/renewal/$hostname.conf\"" certbot
+
+      echo "### Requesting Let's Encrypt certificate for $hostnames ..."
+      #Join $hostnames to -d args
+      #domain_args=""
+      #for domain in "${hostnames[@]}"; do
+      #  domain_args="$domain_args -d $hostname"
+      #done
+
+      docker-compose ${sum} run --rm --entrypoint "sh -c \"\
+        certbot register --agree-tos --email $email\"" certbot
+      echo "### Email registration done"
+
+      docker-compose ${sum} run --rm --entrypoint "\
+        certbot certonly --config /etc/letsencrypt/cli.ini --expand" certbot | tee -a $data_path/$hostname.log
+        #certbot certonly --config /etc/letsencrypt/cli.ini --test-cert --expand" certbot
+      new_file=$(cat $data_path/$hostname.log | grep -A1 Congratulations | grep -Po '/live/\K[^\/]*')
+      if [ "$new_file" = "$hostname" ]; then
+        echo "Certificate created in /etc/letsencrypt/live/$hostname"
+      else
+        echo "Certificate created in /etc/letsencrypt/live/$new_file"
+        mv $data_path/conf/live/$new_file $data_path/conf/live/$hostname
+        echo "Then moved to /etc/letsencrypt/live/$hostname"
+      fi
+      echo "### Reloading nginx ..."
+      docker-compose ${sum} exec proxy nginx -s reload
     fi
-    echo "### Reloading nginx ..."
-    docker-compose ${sum} exec proxy nginx -s reload
 
   fi
 done
