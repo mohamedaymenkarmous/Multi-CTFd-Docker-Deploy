@@ -1,6 +1,11 @@
 #!/bin/bash
 DIR_NAME=$(dirname "$0")
 cd ${DIR_NAME}
+if [ ! -f "config.json" ]; then
+  echo "Please make sure to create config.json file and to configure it before creating any container"
+  echo "cp config.json.template config.json"
+fi
+
 if [ ! -f ".setup_done" ]; then
   ./1-setup-docker.sh
   echo "1"> .setup_done

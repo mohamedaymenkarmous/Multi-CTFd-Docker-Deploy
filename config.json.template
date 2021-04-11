@@ -1,0 +1,47 @@
+{
+  "projects":
+  [
+    {
+      "name":"ctf-entry-level",
+      "description":"A CTF with an entry level",
+      "hostname":"entry.ctf.example.com",
+      "generic-hostname":"",
+      "default-server":"0",
+      "deferred-server":"0",
+      "tls-enabled":"0"
+    },
+    {
+      "name":"ctf-medium-level",
+      "description":"A CTF with a medium level",
+      "hostname":"medium.ctf.example.com",
+      "generic-hostname":"ctf.example.com",
+      "default-server":"0",
+      "deferred-server":"0",
+      "tls-enabled":"1"
+    },
+    {
+      "name":"ctf-hard-level",
+      "description":"A CTF with a hard level",
+      "hostname":"hard.ctf.example.com",
+      "generic-hostname":"ctf.example.com",
+      "default-server":"0",
+      "deferred-server":"0",
+      "tls-enabled":"1"
+    }
+  ],
+  "tls":
+  [
+    {
+      "hostnames":"ctf.example.com entry.ctf.example.com medium.ctf.example.com hard.ctf.example.com",
+      "description":"This certificat can be used for all ctf.example.com subdomains",
+      "email":"admin@example.com",
+      "setup":"1"
+    },
+    {
+      "hostnames":"ctf-2.example.com",
+      "description":"This certificat can be used separetely for another CTF instances",
+      "email":"admin@example.com",
+      "setup":"1"
+    }
+  ]
+}
