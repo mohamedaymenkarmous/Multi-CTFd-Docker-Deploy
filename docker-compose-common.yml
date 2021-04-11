@@ -21,8 +21,6 @@ services:
     depends_on:
       - certbot
       #Depends_On_Here_Dont_Touch_This_Comment
-      - ctfd-ctf-securinets-finals-2021
-      - ctfd-ctf-securinets-quals-2021
 
   certbot:
     image: certbot/certbot
@@ -31,5 +29,4 @@ services:
       - ../data/certbot/www:/var/www/certbot
       - ../data/certbot/log:/var/log/letsencrypt
       #TLS_Certs_Here_Dont_Touch_This_Comment
-      - ../letsencrypt-files/ctfsecurinets.com.ini:/etc/letsencrypt/cli.ini:ro
 
