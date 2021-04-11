@@ -13,7 +13,7 @@ for i in $(seq 1 $n);do
   generic_hostname=$(cat config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['projects'][${i}-1]['generic-hostname'])")
   tls_enabled=$(cat config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['projects'][${i}-1]['tls-enabled'])")
   #ls docker-compose-files/$name.yml &>/dev/null || (
-    sed "s/REPLACED_NAME/${name}/g" <docker-compose-merged-template.yml > docker-compose-files/dcf-${name}.yml;
+    sed "s/REPLACED_NAME/${name}/g" <templates/docker-compose-merged-template.yml > docker-compose-files/dcf-${name}.yml;
     ln -sf ${PWD}/docker-compose-files/dcf-${name}.yml ${PWD}/CTFd/dcf-${name}.yml
   #)
   grep "\- ctfd-${name}$" docker-compose-common.yml &>/dev/null || (
