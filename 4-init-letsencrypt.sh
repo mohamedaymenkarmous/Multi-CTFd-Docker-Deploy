@@ -8,6 +8,8 @@ if ! [ -x "$(command -v docker-compose)" ]; then
 fi
 
 rsa_key_size=4096
+config="../config.json"
+templates="../templates"
 data_path="../data/certbot"
 
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
@@ -25,44 +27,32 @@ done
 
 docker-compose ${sum} config > /dev/null || (echo "There is a problem while checking the config of docker-compose for these files: ${sum}";exit)
 
-n=$(cat ../config.json |python3 -c "import json,sys;print(len(json.load(sys.stdin)['tls']))")
+n=$(cat ${config} |python3 -c "import json,sys;print(len(json.load(sys.stdin)['tls']))")
 
 if [ "$n" == "0" ]; then
   echo "Skipped"
 fi
-ls ../letsencrypt-files &> /dev/null || mkdir ../letsencrypt-files
 # All letsencrypt configuration files should be generated before any containers starts
 for i in $(seq 1 $n);do
-  hostnames=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
-  setup=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['setup'])")
-  email=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['email'])")
+  hostnames=$(cat ${config} |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
+  setup=$(cat ${config} |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['setup'])")
+  email=$(cat ${config} |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['email'])")
   if [ "$setup" == "1" ]; then
 
     hostname=$(echo $hostnames | cut -d" " -f1)
 
     echo "### Backuping the old certificate ..."
     bn=$(date +%s)
-    cp -R $data_path/conf/live/$hostname $data_path/conf/live/$hostname.bak.$bn
+    cp -R $data_path/conf/live/${hostname} $data_path/conf/live/${hostname}.bak.$bn
     echo "Backup folder: $data_path/conf/live/$hostname.bak.$bn"
 
     mkdir -p "$data_path/conf/live/$hostname"
 
     echo "### Generating letsencrypt configuration files"
     hostnames_formatted=$(echo $hostnames| tr ' ' ', ')
-    sed "s/REPLACED_HOSTNAMES/${hostnames_formatted}/g" <../templates/letsencrypt-template.ini > ../letsencrypt-files/${hostname}.ini
-    sed "s/REPLACED_EMAIL/${email}/g" <../letsencrypt-files/${hostname}.ini > ../letsencrypt-files/${hostname}.ini.bak
-    mv ../letsencrypt-files/${hostname}.ini.bak ../letsencrypt-files/${hostname}.ini
-
-#  fi
-#done
-
-#for i in $(seq 1 $n);do
-#  hostnames=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")
-#  setup=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['setup'])")
-#  email=$(cat ../config.json |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['email'])")
-#  if [ "$setup" == "1" ]; then
-
-#    hostname=$(echo $hostnames | cut -d" " -f1)
+    sed "s/REPLACED_HOSTNAMES/${hostnames_formatted}/g" <${templates}/letsencrypt-template.ini > ${data_path}/conf/${hostname}.ini
+    sed "s/REPLACED_EMAIL/${email}/g" <${data_path}/conf/${hostname}.ini > ${data_path}/conf/${hostname}.ini.bak
+    mv ${data_path}/conf/${hostname}.ini.bak ${data_path}/conf/${hostname}.ini
 
     echo "### Creating dummy certificate for $hostname ..."
     path="/etc/letsencrypt/live/$hostname"
@@ -104,9 +94,9 @@ for i in $(seq 1 $n);do
       echo "### Email registration done"
 
       docker-compose ${sum} run --rm --entrypoint "\
-        certbot certonly --config /etc/letsencrypt/cli.ini --expand" certbot | tee -a $data_path/$hostname.log
+        certbot certonly --config /etc/letsencrypt/${hostname}.ini --expand" certbot | tee -a $data_path/log/${hostname}.log
         #certbot certonly --config /etc/letsencrypt/cli.ini --test-cert --expand" certbot
-      new_file=$(cat $data_path/$hostname.log | grep -A1 Congratulations | grep -Po '/live/\K[^\/]*')
+      new_file=$(cat $data_path/log/$hostname.log | grep -A1 Congratulations | grep -Po '/live/\K[^\/]*')
       if [ "$new_file" = "$hostname" ]; then
         echo "Certificate created in /etc/letsencrypt/live/$hostname"
       else
@@ -118,5 +108,8 @@ for i in $(seq 1 $n);do
       docker-compose ${sum} exec proxy nginx -s reload
     fi
 
+  else
+    echo "### Reloading nginx ..."
+    docker-compose ${sum} exec proxy nginx -s reload
   fi
 done
