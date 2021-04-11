@@ -2,3 +2,7 @@ CTFd
 .setup_done
 data/nginx
 data/certbot
+nginx/snippets/snakeoil-*
+nginx/sites-enabled/*
+letsencrypt-files/
+docker-compose-files/

@@ -13,7 +13,7 @@ sudo apt-get -y install python3-pip
 sudo pip3 install ruamel.yaml
 cd ..
 # Commented for now but it'll be decomissionned once we know that it's no longer useful. I'm still trying to understand why I didn't have used it
-# The CTFd template is now manually created from
+# The CTFd template is now manually created from 
 #mkdir -p data/templates
 #./bin/merge-yaml.py docker-compose-base.yml CTFd/docker-compose.yml data/templates/docker-compose-merged.yml
 #diff data/templates/docker-compose-merged.yml docker-compose-merged-reference.yml || (
