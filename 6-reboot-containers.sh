@@ -1,5 +1,9 @@
 #!/bin/bash
 
 cd CTFd
-docker-compose -f dcf-ctf-securinets-quals-2020.yml -f dcf-docker-compose-common.yml down
-docker-compose -f dcf-ctf-securinets-quals-2020.yml -f dcf-docker-compose-common.yml up -d
+sum=""
+for x in $(ls -1 dcf-*.yml);do
+  sum="${sum} -f ${x}"
+done
+sudo docker-compose ${sum} down
+sudo docker-compose ${sum} --compatibility up -d
