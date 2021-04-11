@@ -12,10 +12,12 @@ git fetch
 sudo apt-get -y install python3-pip
 sudo pip3 install ruamel.yaml
 cd ..
-mkdir -p data/templates
-./bin/merge-yaml.py docker-compose-base.yml CTFd/docker-compose.yml data/templates/docker-compose-merged.yml
-diff data/templates/docker-compose-merged.yml docker-compose-merged-reference.yml || (
-  echo "The CTFd/docker-compose.yml was chaanged. Please update the docker-compose-merged-reference.yml file to refresh the new docker-compose-files/ files";exit)
+# Commented for now but it'll be decomissionned once we know that it's no longer useful. I'm still trying to understand why I didn't have used it
+# The CTFd template is now manually created from
+#mkdir -p data/templates
+#./bin/merge-yaml.py docker-compose-base.yml CTFd/docker-compose.yml data/templates/docker-compose-merged.yml
+#diff data/templates/docker-compose-merged.yml docker-compose-merged-reference.yml || (
+#  echo "The CTFd/docker-compose.yml was chaanged. Please update the docker-compose-merged-reference.yml file to refresh the new docker-compose-files/ files";exit)
 ln -sf ${PWD}/docker-compose-common.yml ${PWD}/CTFd/dcf-docker-compose-common.yml
 echo "### Creating docker-compose files"
 ./2-create-new-projects-docker.sh
