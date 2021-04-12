@@ -16,10 +16,10 @@ for i in $(seq 1 $n);do
     sed "s/REPLACED_NAME/${name}/g" <templates/docker-compose-merged-template.yml > docker-compose-files/dcf-${name}.yml;
     ln -sf ${PWD}/docker-compose-files/dcf-${name}.yml ${PWD}/CTFd/dcf-${name}.yml
   #)
+  grep "\- ctfd-${name}$" docker-compose-common.yml &>/dev/null || (
+    sed "s!#Depends_On_Here_Dont_Touch_This_Comment!#Depends_On_Here_Dont_Touch_This_Comment\n      - ctfd-${name}!g" <docker-compose-common.yml > docker-compose-common.yml.tmp;
+    mv docker-compose-common.yml.tmp docker-compose-common.yml)
 # Disabling this feature
-#  grep "\- ctfd-${name}$" docker-compose-common.yml &>/dev/null || (
-#    sed "s!#Depends_On_Here_Dont_Touch_This_Comment!#Depends_On_Here_Dont_Touch_This_Comment\n      - ctfd-${name}!g" <docker-compose-common.yml > docker-compose-common.yml.tmp;
-#    mv docker-compose-common.yml.tmp docker-compose-common.yml)
 #  if [ "$tls_enabled" == "1" ]; then
 #    grep "\- ../letsencrypt-files/${generic_hostname}.ini:/etc/letsencrypt/cli.ini:ro$" docker-compose-common.yml &>/dev/null || (
 #      sed "s!#TLS_Certs_Here_Dont_Touch_This_Comment!#TLS_Certs_Here_Dont_Touch_This_Comment\n      - ../letsencrypt-files/${generic_hostname}.ini:/etc/letsencrypt/cli.ini:ro!g" <docker-compose-common.yml > docker-compose-common.yml.tmp;
