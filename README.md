@@ -59,7 +59,11 @@ This is an example of a configuration that will let you create three CTFd instan
       "email":"admin@example.com",
       "setup":"1"
     }
-  ]
+  ],
+  "common": {
+    "tasks_compatible":"0",
+    "proxy_conf_path":""
+  }
 }
 ```
 
