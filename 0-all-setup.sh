@@ -41,4 +41,4 @@ ln -sf ${PWD}/../logo.png ${PWD}/CTFd/themes/core/static/img/logo.png
 ln -sf ${PWD}/../favicon.ico ${PWD}/CTFd/themes/core/static/img/favicon.ico
 cd - > /dev/null
 echo "### Building the containers"
-./6-rebuild-containers.sh
+./5-rebuild-containers.sh
