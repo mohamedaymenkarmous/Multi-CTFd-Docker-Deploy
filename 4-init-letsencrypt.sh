@@ -1,17 +1,40 @@
 #!/bin/bash
 
+DIR_NAME=$(dirname "$0")
+cd ${DIR_NAME}
+
+if [ ! -f "config.json" ]; then
+  echo "Please make sure to create config.json file and to configure it before creating any container"
+  echo "cp config.json.template config.json"
+fi
+
+# The script needs to run from the location where the Dockerfile is located
+cd CTFd
+
 #Source: https://raw.githubusercontent.com/wmnnd/nginx-certbot/master/init-letsencrypt.sh
+
+config="../config.json"
+templates="../templates"
+data_path="../data/certbot"
 
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-rsa_key_size=4096
-config="../config.json"
-templates="../templates"
-data_path="../data/certbot"
+common_proxy_conf_path=$(cat $config |python3 -c "import json,sys;print(json.load(sys.stdin)['common']['proxy_conf_path'])" 2>/dev/null)
+if [ ! -z "$common_proxy_conf_path" ]; then
+  cd ../
+  if [ -d "$common_proxy_conf_path" ]; then
+    real_path=$(readlink -f $common_proxy_conf_path)
+    data_path=$real_path/data/certbot
+  else
+    echo "Error: File path specific in config.json:common.proxy_conf_path is not a directory";exit
+  fi
+  cd - > /dev/null
+fi
 
+rsa_key_size=4096
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
   echo "### Downloading recommended TLS parameters ..."
   mkdir -p "$data_path/conf"
@@ -24,6 +47,12 @@ sum=""
 for x in $(ls -1 dcf-*.yml);do
   sum="${sum} -f ${x}"
 done
+if [ ! -z "$real_path" ]; then
+  sum="${sum} -f $real_path/docker-compose-common.yml"
+  if [ ! -f "$real_path/docker-compose-common.yml" ]; then
+    $real_path/2-create-new-projects-docker.sh
+  fi
+fi
 
 docker-compose ${sum} config > /dev/null || (echo "There is a problem while checking the config of docker-compose for these files: ${sum}";exit)
 
@@ -32,6 +61,7 @@ n=$(cat ${config} |python3 -c "import json,sys;print(len(json.load(sys.stdin)['t
 if [ "$n" == "0" ]; then
   echo "Skipped"
 fi
+
 # All letsencrypt configuration files should be generated before any containers starts
 for i in $(seq 1 $n);do
   hostnames=$(cat ${config} |python3 -c "import json,sys;print(json.load(sys.stdin)['tls'][${i}-1]['hostnames'])")

@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.7'
 
 services:
   ctfd-REPLACED_NAME:
@@ -17,9 +17,9 @@ services:
       - REVERSE_PROXY=true
       - USE_RELOAD=false
     volumes:
-      - .data/CTFd/REPLACED_NAME/logs:/var/log/CTFd
-      - .data/CTFd/REPLACED_NAME/uploads:/var/uploads
-      - .:/opt/CTFd:ro
+      - REPLACED_FULL_PATH/CTFd/.data/CTFd/REPLACED_NAME/logs:/var/log/CTFd
+      - REPLACED_FULL_PATH/CTFd/.data/CTFd/REPLACED_NAME/uploads:/var/uploads
+      - REPLACED_FULL_PATH/CTFd:/opt/CTFd:ro
     depends_on:
       - db-REPLACED_NAME
     networks:
@@ -37,7 +37,7 @@ services:
       - MYSQL_PASSWORD=ctfd
       - MYSQL_DATABASE=ctfd
     volumes:
-      - .data/mysql/REPLACED_NAME:/var/lib/mysql
+      - REPLACED_FULL_PATH/CTFd/.data/mysql/REPLACED_NAME:/var/lib/mysql
     networks:
       internal:
     # This command is required to set important mariadb defaults
@@ -47,11 +47,13 @@ services:
     image: redis:4
     restart: always
     volumes:
-      - .data/redis/REPLACED_NAME:/data
+      - REPLACED_FULL_PATH/CTFd/.data/redis/REPLACED_NAME:/data
     networks:
       internal:
 
 networks:
   default:
+    name: ctf_default
   internal:
+    name: ctf_internal
     internal: true

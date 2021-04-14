@@ -1,30 +1,39 @@
-version: '2.1'
+version: '3.7'
 
 services:
   proxy:
+    container_name: proxy
     image: nginx:alpine
     restart: always
     # Included NGINX config used hostname to determine what it's server_name will be
     # Either set NGINX_HOSTNAME to it's public DNS name, change this line, or the config
     hostname: ${NGINX_HOSTNAME:-localhost}
     ports:
-      - "80:8000"
-      - "443:8443"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ../nginx:/etc/nginx:ro
-      - ../data/nginx/logs:/var/log/nginx
-      - ../data/certbot/conf:/etc/letsencrypt
-      - ../data/certbot/www:/var/www/certbot
+      - REPLACED_FULL_PATH/nginx:/etc/nginx:ro
+      - REPLACED_FULL_PATH/data/nginx/logs:/var/log/nginx
+      - REPLACED_FULL_PATH/data/certbot/conf:/etc/letsencrypt
+      - REPLACED_FULL_PATH/data/certbot/www:/var/www/certbot
     networks:
       default:
       internal:
-    depends_on:
-      - certbot
+    #depends_on:
+      #- certbot
       #Depends_On_Here_Dont_Touch_This_Comment
 
   certbot:
+    container_name: certbot
     image: certbot/certbot
     volumes:
-      - ../data/certbot/conf:/etc/letsencrypt
-      - ../data/certbot/www:/var/www/certbot
-      #TLS_Certs_Here_Dont_Touch_This_Comment
+      - REPLACED_FULL_PATH/data/certbot/conf:/etc/letsencrypt
+      - REPLACED_FULL_PATH/data/certbot/www:/var/www/certbot
+      - REPLACED_FULL_PATH/data/certbot/log:/var/log/letsencrypt
+
+networks:
+  default:
+    name: ctf_default
+  internal:
+    name: ctf_internal
+    internal: true
