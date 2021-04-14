@@ -43,5 +43,5 @@ echo "### Building the containers"
 # It's possible to use the depends_on parameter in docker-compose file in the proxy service to make it wait for the
 #   creation of the other containers but it's hard to manage when it comes to adding and removing the container names from that parameter
 #   so I opted to start all the containers except the proxy then to start the proxy to make sure all the web servers defined in the upstream directive are reachable
-sudo docker-compose ${sum} --compatibility up -d --force-recreate #--build
-sudo docker-compose ${dcf_common} --compatibility up -d --force-recreate
+sudo docker-compose ${sum} down
+sudo docker-compose ${dcf_common} up -d
