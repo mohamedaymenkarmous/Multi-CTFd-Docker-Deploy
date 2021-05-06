@@ -1,9 +1,10 @@
 version: '3.7'
 
 services:
-  ctfd-REPLACED_NAME:
-    container_name: ctfd-REPLACED_NAME
+  REPLACED_TARGET:
+    container_name: REPLACED_TARGET
     build: .
+    image: REPLACED_TARGET
     user: root
     restart: always
     environment:
