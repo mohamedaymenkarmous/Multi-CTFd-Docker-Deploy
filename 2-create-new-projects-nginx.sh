@@ -17,6 +17,9 @@ fi
 for i in $(seq 1 $N_PROJECTS);do
   name=$(parse_config '' "'projects'" "${i}-1" "'name'")
   target=$(parse_config '' "'projects'" "${i}-1" "'target'")
+  if [ -z "${target}" ]; then
+    target="ctfd-${name}"
+  fi
   hostname=$(parse_config '' "'projects'" "${i}-1" "'hostname'")
   generic_hostname=$(parse_config '' "'projects'" "${i}-1" "'generic-hostname'")
   internal_port=$(parse_config '' "'projects'" "${i}-1" "'internal-port'")

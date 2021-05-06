@@ -9,7 +9,7 @@
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"0",
-      "target":"ctfd-ctf-entry-level-container",
+      "target":"ctfd-ctf-entry-level",
       "internal-port":"8000"
     },
     {
@@ -20,7 +20,7 @@
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"1",
-      "target":"ctfd-ctf-medium-level-container",
+      "target":"ctfd-ctf-medium-level",
       "internal-port":"8000"
     },
     {
@@ -31,7 +31,7 @@
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"1",
-      "target":"ctfd-ctf-hard-level-container",
+      "target":"ctfd-ctf-hard-level",
       "internal-port":"8000"
     }
   ],
