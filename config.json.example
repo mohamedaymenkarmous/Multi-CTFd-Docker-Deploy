@@ -8,7 +8,9 @@
       "generic-hostname":"",
       "default-server":"0",
       "deferred-server":"0",
-      "tls-enabled":"0"
+      "tls-enabled":"0",
+      "target":"ctfd-ctf-entry-level-container",
+      "internal-port":"8000"
     },
     {
       "name":"ctf-medium-level",
@@ -17,7 +19,9 @@
       "generic-hostname":"ctf.example.com",
       "default-server":"0",
       "deferred-server":"0",
-      "tls-enabled":"1"
+      "tls-enabled":"1",
+      "target":"ctfd-ctf-medium-level-container",
+      "internal-port":"8000"
     },
     {
       "name":"ctf-hard-level",
@@ -26,7 +30,9 @@
       "generic-hostname":"ctf.example.com",
       "default-server":"0",
       "deferred-server":"0",
-      "tls-enabled":"1"
+      "tls-enabled":"1",
+      "target":"ctfd-ctf-hard-level-container",
+      "internal-port":"8000"
     }
   ],
   "tls":
