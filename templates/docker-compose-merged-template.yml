@@ -17,6 +17,14 @@ services:
       - USE_SSL=false
       - REVERSE_PROXY=true
       - USE_RELOAD=false
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     volumes:
       - REPLACED_FULL_PATH/CTFd/.data/CTFd/REPLACED_NAME/logs:/var/log/CTFd
       - REPLACED_FULL_PATH/CTFd/.data/CTFd/REPLACED_NAME/uploads:/var/uploads
@@ -40,6 +48,14 @@ services:
       - MYSQL_DATABASE=ctfd
     volumes:
       - REPLACED_FULL_PATH/CTFd/.data/mysql/REPLACED_NAME:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     networks:
       internal:
     # This command is required to set important mariadb defaults
@@ -51,6 +67,14 @@ services:
     restart: always
     volumes:
       - REPLACED_FULL_PATH/CTFd/.data/redis/REPLACED_NAME:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     networks:
       internal:
 

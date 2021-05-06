@@ -16,6 +16,14 @@ services:
       - REPLACED_FULL_PATH/data/nginx/logs:/var/log/nginx
       - REPLACED_FULL_PATH/data/certbot/conf:/etc/letsencrypt
       - REPLACED_FULL_PATH/data/certbot/www:/var/www/certbot
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     networks:
       default:
       internal:
@@ -26,6 +34,14 @@ services:
   certbot:
     container_name: certbot
     image: certbot/certbot
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
     volumes:
       - REPLACED_FULL_PATH/data/certbot/conf:/etc/letsencrypt
       - REPLACED_FULL_PATH/data/certbot/www:/var/www/certbot
