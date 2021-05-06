@@ -17,36 +17,36 @@ This is an example of a configuration that will let you create three CTFd instan
   [
     {
       "name":"ctf-entry-level",
-      "target":"ctfd-ctf-entry-level-container",
-      "internal-port":"8000",
       "description":"A CTF with an entry level",
       "hostname":"entry.ctf.example.com",
       "generic-hostname":"",
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"0"
+      "target":"ctfd-ctf-entry-level",
+      "internal-port":"8000",
     },
     {
       "name":"ctf-medium-level",
-      "target":"ctfd-ctf-medium-level-container",
-      "internal-port":"8000",
       "description":"A CTF with a medium level",
       "hostname":"medium.ctf.example.com",
       "generic-hostname":"ctf.example.com",
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"1"
+      "target":"ctfd-ctf-medium-level",
+      "internal-port":"8000",
     },
     {
       "name":"ctf-hard-level",
-      "target":"ctfd-ctf-hard-level-container",
-      "internal-port":"8000",
       "description":"A CTF with a hard level",
       "hostname":"hard.ctf.example.com",
       "generic-hostname":"ctf.example.com",
       "default-server":"0",
       "deferred-server":"0",
       "tls-enabled":"1"
+      "target":"ctfd-ctf-hard-level",
+      "internal-port":"8000",
     }
   ],
   "tls":
@@ -114,12 +114,27 @@ And you will find a common docker container `proxy` shared with all the CTFd ins
 To check if everything was OK, you have to execute:
 
 ```
-docker ps
+docker ps -a
 ```
 
-For the previous example, you have to see ten docker containers: `proxy`, `ctfd_ctf-entry-level`, `db_ctf-entry-level`, `cache_ctf-entry-level`, `ctfd_ctf-medium-level`, `db_ctf-medium-level`, `cache_ctf-medium-level`, `ctfd_ctf-hard-level`, `db_ctf-hard-level`, `cache_ctf-hard-level`.
+For the previous example, you have to see ten docker containers:
+
+| Docker container name | Docker image | Open ports | Status |
+|-----------------------|--------------|------------|--------|
+| proxy | nginx:alpine | 0.0.0.0:80->80/tcp, :::80->80/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp | Up |
+| certbot | certbot/certbot | - | Exited |
+| ctfd-ctf-entry-level | ctfd-ctf-entry-level | 8000/tcp | Up |
+| ctfd-ctf-medium-level | ctfd-ctf-medium-level | 8000/tcp | Up |
+| ctfd-ctf-hard-level | ctfd-ctf-hard-level | 8000/tcp | Up |
+| db-ctf-entry-level | mariadb:10.4.12  | - | Up |
+| db-ctf-medium-level | mariadb:10.4.12  | - | Up |
+| db-ctf-hard-level | mariadb:10.4.12  | - | Up |
+| cache-ctf-entry-level | redis:4 | - | Up |
+| cache-ctf-medium-level | redis:4 | - | Up |
+| cache-ctf-hard-level | redis:4 | - | Up |
+
 
 ## Reporting an issue or a feature request
 
-Issues and feature requests are tracked in the Github [issue tracker](https://github.com/mohamedaymenkarmous/multi-ctfd-docker-deploy/issues).
+Issues and feature requests are tracked in the Github [issue tracker](https://github.com/mohamedaymenkarmous/Multi-CTFd-Docker-Deploy/issues).
 
