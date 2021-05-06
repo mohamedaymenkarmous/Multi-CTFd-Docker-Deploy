@@ -28,10 +28,10 @@ cd ..
 echo "### Creating docker-compose files"
 ./2-create-new-projects-docker.sh
 echo "### Creating new projects"
-./3-create-new-projects-nginx.sh
+./2-create-new-projects-nginx.sh
 cd CTFd/
 echo "### Generating TLS certificates"
-../4-init-letsencrypt.sh
+../3-init-letsencrypt.sh
 echo "### Checking for the github.com/noraj/ctfd-theme-sigsegv2 plugin"
 (ls CTFd/themes/sigsegv2 &>/dev/null && cd CTFd/themes/sigsegv2 && git pull && cd ../../..) || git clone https://github.com/noraj/ctfd-theme-sigsegv2.git CTFd/themes/sigsegv2
 echo "### Adding logo and favicon files"

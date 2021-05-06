@@ -28,8 +28,8 @@ done
 cd - >/dev/null
 
 if [ ! -z "$real_path" ]; then
-  dcf_common="-f $real_path/docker-compose-common.yml"
-  if [ ! -f "$real_path/docker-compose-common.yml" ]; then
+  dcf_common="-f $real_path/docker-compose-files/dcf-docker-compose-common.yml"
+  if [ ! -f "$real_path/docker-compose-files/dcf-docker-compose-common.yml" ]; then
     $real_path/2-create-new-projects-docker.sh
   fi
 else

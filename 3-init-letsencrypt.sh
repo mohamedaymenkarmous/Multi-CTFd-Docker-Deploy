@@ -48,8 +48,8 @@ for x in $(ls -1 dcf-*.yml);do
   sum="${sum} -f ${x}"
 done
 if [ ! -z "$real_path" ]; then
-  sum="${sum} -f $real_path/docker-compose-common.yml"
-  if [ ! -f "$real_path/docker-compose-common.yml" ]; then
+  sum="${sum} -f $real_path/docker-compose-files/dcf-docker-compose-common.yml"
+  if [ ! -f "$real_path/docker-compose-files/dcf-docker-compose-common.yml" ]; then
     $real_path/2-create-new-projects-docker.sh
   fi
 fi
